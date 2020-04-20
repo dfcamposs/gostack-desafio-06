@@ -1,18 +1,17 @@
 import {
   Entity,
   Column,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  JoinColumn,
-  UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
+
 import Category from './Category';
 
 @Entity('transactions')
 class Transaction {
-  @PrimaryColumn()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -22,11 +21,13 @@ class Transaction {
   @Column()
   type: 'income' | 'outcome';
 
-  @Column()
+  @Column('decimal')
   value: number;
 
-  @ManyToOne(() => Category)
-  @JoinColumn({ name: 'id' })
+  @ManyToOne(() => Category, category => category.transaction, { eager: true })
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
+
   @Column()
   category_id: string;
 
